@@ -268,6 +268,11 @@ void Atom::writeInt(int value, int64_t offset) {
 	*(int *)&(content_[offset]) = swap32(value);
 }
 
+void Atom::writeInt(int64_t value, int64_t offset) {
+	assert(content_.size() >= offset + 4);
+	*(int64_t *)&(content_[offset]) = swap64(value);
+}
+
 void Atom::readChar(char *str, int64_t offset, int64_t length) {
 	for(int i = 0; i < length; i++)
 		str[i] = content_[offset + i];

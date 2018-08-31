@@ -17,7 +17,7 @@ class Codec {
 public:
 	Codec(AVCodecContext* c);
 	std::string name_;
-	void parse(Atom *trak, std::vector<int> &offsets, Atom *mdat);
+	void parse(Atom *trak, std::vector<int64_t> &offsets, Atom *mdat);
 	bool matchSample(const uchar *start);
 	int getLength(const uchar *start, uint maxlength, int &duration);
 	//used by: mp4a

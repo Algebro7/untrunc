@@ -36,7 +36,7 @@ public:
 	Codec codec_;
 
 	std::vector<int> times_;
-	std::vector<int> offsets_;
+	std::vector<int64_t > offsets_;
 	std::vector<int> sizes_;
 	std::vector<int> keyframes_; //used for 'avc1', 0 based!
 
@@ -50,7 +50,7 @@ public:
 	std::vector<int> getSampleTimes(Atom *t);
 	std::vector<int> getKeyframes(Atom *t);
 	std::vector<int> getSampleSizes(Atom *t);
-	std::vector<int> getChunkOffsets(Atom *t);
+	std::vector<int64_t> getChunkOffsets(Atom *t);
 	std::vector<int> getSampleToChunk(Atom *t, int nchunks);
 
 	void saveSampleTimes();

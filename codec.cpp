@@ -35,7 +35,7 @@ Codec::Codec(AVCodecContext* c) : avc_config_(NULL) {
 
 }
 
-void Codec::parse(Atom *trak, vector<int> &offsets, Atom *mdat) {
+void Codec::parse(Atom *trak, vector<int64_t> &offsets, Atom *mdat) {
 	Atom *stsd = trak->atomByName("stsd");
 	int entries = stsd->readInt(4);
 	if(entries != 1)
@@ -67,7 +67,7 @@ void Codec::parse(Atom *trak, vector<int> &offsets, Atom *mdat) {
 	mask0_ = 0xffffffff;
 	//build the mask:
 	for(int i = 0; i < offsets.size(); i++) {
-		int offset = offsets[i];
+		int64_t offset = offsets[i];
 		if(offset < mdat->start_ || offset - mdat->start_ > mdat->length_) {
 			cout << "i = " << i;
 			cout << "\noffset = " << offset

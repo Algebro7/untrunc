@@ -54,7 +54,7 @@ void Track::parse(Atom *mdat) {
 	keyframes_ = getKeyframes(trak_);
 	sizes_ = getSampleSizes(trak_);
 
-	vector<int> chunk_offsets = getChunkOffsets(trak_);
+	vector<int64_t> chunk_offsets = getChunkOffsets(trak_);
 	vector<int> sample_to_chunk = getSampleToChunk(trak_, chunk_offsets.size());
 
 	if(times_.size() != sizes_.size()) {
@@ -68,7 +68,7 @@ void Track::parse(Atom *mdat) {
 	}
 	//compute actual offsets
 	int old_chunk = -1;
-	int offset = -1;
+	int64_t offset = -1;
 	for(unsigned int i = 0; i < sizes_.size(); i++) {
 		int chunk = sample_to_chunk[i];
 		int size = sizes_[i];
@@ -234,8 +234,8 @@ vector<int> Track::getSampleSizes(Atom *t) {
 
 
 
-vector<int> Track::getChunkOffsets(Atom *t) {
-	vector<int> chunk_offsets;
+vector<int64_t> Track::getChunkOffsets(Atom *t) {
+	vector<int64_t> chunk_offsets;
 	//chunk offsets
 	Atom *stco = t->atomByName("stco");
 	if(stco) {
@@ -296,7 +296,7 @@ void Track::saveSampleTimes() {
 	stts->content_.resize(4 + //version
 	                      4 + //entries
 	                      8*vp.size()); //time table
-	stts->writeInt(vp.size(), 4);
+	stts->writeInt((int)vp.size(), 4);
 	int cnt = 0;
 	for(auto p : vp) {
 		stts->writeInt(p.first, 8 + 8*cnt); // sample_count
@@ -314,7 +314,7 @@ void Track::saveKeyframes() {
 	stss->content_.resize(4 + //version
 						  4 + //entries
 						  4*keyframes_.size()); //time table
-	stss->writeInt(keyframes_.size(), 4);
+	stss->writeInt((int)keyframes_.size(), 4);
 	for(unsigned int i = 0; i < keyframes_.size(); i++)
 		stss->writeInt(keyframes_[i] + 1, 8 + 4*i);
 }
@@ -327,7 +327,7 @@ void Track::saveSampleSizes() {
 						  4 + //entries
 						  4*sizes_.size()); //size table
 	stsz->writeInt(0, 4);
-	stsz->writeInt(sizes_.size(), 8);
+	stsz->writeInt((int)sizes_.size(), 8);
 	for(unsigned int i = 0; i < sizes_.size(); i++) {
 		stsz->writeInt(sizes_[i], 12 + 4*i);
 	}
@@ -348,20 +348,24 @@ void Track::saveSampleToChunk() {
 void Track::saveChunkOffsets() {
 	Atom *co64 = trak_->atomByName("co64");
 	if(co64) {
-		trak_->prune("co64");
-		Atom *stbl = trak_->atomByName("stbl");
-		Atom *new_stco = new Atom;
-		memcpy(new_stco->name_, "stco", 5);
-		stbl->children_.push_back(new_stco);
+//		trak_->prune("co64");
+//		Atom *stbl = trak_->atomByName("stbl");
+//		Atom *new_stco = new Atom;
+//		memcpy(new_stco->name_, "stco", 5);
+//		stbl->children_.push_back(new_stco);
+        co64->writeInt((int64_t)offsets_.size(), 8);
+        for(vector<int64_t>::size_type i = 0; i < offsets_.size(); i++)
+            co64->writeInt((int64_t)offsets_[i], 8 + 8*i);
+	} else {
+		Atom *stco = trak_->atomByName("stco");
+		assert(stco);
+		stco->content_.resize(4 + //version
+							  4 + //number of entries
+							  4*offsets_.size());
+		stco->writeInt((int)offsets_.size(), 4);
+		for(unsigned int i = 0; i < offsets_.size(); i++)
+			stco->writeInt((int)offsets_[i], 8 + 4*i);
 	}
-	Atom *stco = trak_->atomByName("stco");
-	assert(stco);
-	stco->content_.resize(4 + //version
-						  4 + //number of entries
-						  4*offsets_.size());
-	stco->writeInt(offsets_.size(), 4);
-	for(unsigned int i = 0; i < offsets_.size(); i++)
-		stco->writeInt(offsets_[i], 8 + 4*i);
 }
 
 
