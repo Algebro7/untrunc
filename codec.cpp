@@ -66,7 +66,7 @@ void Codec::parse(Atom *trak, vector<int64_t> &offsets, Atom *mdat) {
 	mask1_ = 0xffffffff;
 	mask0_ = 0xffffffff;
 	//build the mask:
-	for(int i = 0; i < offsets.size(); i++) {
+	for(uint64_t i = 0; i < offsets.size(); i++) {
 		int64_t offset = offsets[i];
 		if(offset < mdat->start_ || offset - mdat->start_ > mdat->length_) {
 			cout << "i = " << i;

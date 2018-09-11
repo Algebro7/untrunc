@@ -248,8 +248,8 @@ vector<int64_t> Track::getChunkOffsets(Atom *t) {
 		if(!co64)
 			throw string("Missing chunk offset atom");
 
-		int nchunks = co64->readInt(4);
-		for(int i = 0; i < nchunks; i++)
+		int64_t nchunks = co64->readInt64(8);
+		for(int64_t i = 0; i < nchunks; i++)
 			chunk_offsets.push_back(co64->readInt(12 + i*8));
 	}
 	return chunk_offsets;
@@ -348,8 +348,8 @@ void Track::saveSampleToChunk() {
 void Track::saveChunkOffsets() {
 	Atom *co64 = trak_->atomByName("co64");
 	if(co64) {
-//		trak_->prune("co64");
-//		Atom *stbl = trak_->atomByName("stbl");
+		trak_->prune("co64");
+		Atom *stbl = trak_->atomByName("stbl");
 //		Atom *new_stco = new Atom;
 //		memcpy(new_stco->name_, "stco", 5);
 //		stbl->children_.push_back(new_stco);

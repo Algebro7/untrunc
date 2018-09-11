@@ -45,6 +45,7 @@ public:
 	static bool isVersioned(char *id);
 
 	virtual int readInt(int64_t offset);
+	virtual int64_t readInt64(int64_t offset);
 	void writeInt(int value, int64_t offset);
 	void writeInt(int64_t value, int64_t offset);
 	void readChar(char *str, int64_t offset, int64_t length);

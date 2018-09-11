@@ -49,7 +49,7 @@ public:
 	size_t readBuffer(uchar* target, size_t size, size_t n);
 
 	int readInt();
-	int64_t readInt64();
+	uint64_t readInt64();
 	void readChar(char *dest, size_t n);
 	std::vector<uchar> read(size_t n);
 

@@ -263,6 +263,10 @@ int Atom::readInt(int64_t offset) {
 	return swap32(*(int *)&(content_[offset]));
 }
 
+int64_t Atom::readInt64(int64_t offset) {
+    return swap64(*(int64_t *)&(content_[offset]));
+}
+
 void Atom::writeInt(int value, int64_t offset) {
 	assert(content_.size() >= offset + 4);
 	*(int *)&(content_[offset]) = swap32(value);

@@ -136,9 +136,9 @@ int FileRead::readInt() {
 	return swap32(value);
 }
 
-int64_t FileRead::readInt64() {
-	int64_t value;
-	int n = readBuffer((uchar*)&value, sizeof(value), 1);
+uint64_t FileRead::readInt64() {
+	uint64_t value;
+	uint64_t n = readBuffer((uchar*)&value, sizeof(value), 1);
 	if(n != 1)
 		throw string("Could not read atom length");
 
